@@ -1,4 +1,3 @@
-/* vim: set ai et ts=4 sw=4: */
 #include "st7735.h"
 #include "time.h"
 #include <stdio.h>
@@ -9,7 +8,6 @@
 #include <sys/socket.h>
 #include <sys/ioctl.h>
 #include <netinet/in.h>
-#include <net/if.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/ioctl.h>
@@ -81,7 +79,7 @@ void lcd_write_ch(uint16_t x, uint16_t y, char ch, FontType font, uint16_t color
 }
 
 /*
- * display string
+ * Display string
  */
 void lcd_write_string(uint16_t x, uint16_t y, char *str, FontDef font, uint16_t color, uint16_t bgcolor)
 {
@@ -269,103 +267,4 @@ void lcd_display_percentage(uint8_t val, uint16_t color)
     }
     for (count = 0; count < 10 - val; count++)
     {
-        lcd_fill_rectangle(xCoordinate, 60, 6, 10, ST7735_GRAY);
-        xCoordinate += 10;
-    }
-}
-
-void lcd_display_cpuLoad(void)
-{
-    char iPSource[20] = {0};
-    uint8_t cpuLoad = 0;
-    uint8_t cpuStr[10] = {0};
-    lcd_fill_screen(ST7735_BLACK);
-    cpuLoad = get_cpu_message();
-    sprintf(cpuStr, "%d", cpuLoad);
-    lcd_fill_rectangle(0, 20, ST7735_WIDTH, 5, ST7735_BLUE);
-    if (IP_SWITCH == IP_DISPLAY_OPEN)
-    {
-        lcd_write_string(0, 0, "IP:", Font_8x16, ST7735_WHITE, ST7735_BLACK);
-        strcpy(iPSource, get_ip_address_new());                                       // Get the IP address of the device's wireless network card
-        lcd_write_string(24, 0, iPSource, Font_8x16, ST7735_WHITE, ST7735_BLACK); // Send the IP address to the lower machine
-    }
-    else
-    {
-        lcd_write_string(0, 0, CUSTOM_DISPLAY, Font_8x16, ST7735_WHITE, ST7735_BLACK); // Send the IP address to the lower machine
-    }
-    lcd_write_string(36, 35, "CPU:", Font_11x18, ST7735_WHITE, ST7735_BLACK);
-    lcd_write_string(80, 35, cpuStr, Font_11x18, ST7735_WHITE, ST7735_BLACK);
-    lcd_write_string(113, 35, "%", Font_11x18, ST7735_WHITE, ST7735_BLACK);
-    lcd_display_percentage(cpuLoad, ST7735_GREEN);
-}
-
-void lcd_display_ram(void)
-{
-    float Totalram = 0.0;
-    float freeram = 0.0;
-    uint8_t residue = 0;
-    uint8_t Total[10] = {0};
-    uint8_t free[10] = {0};
-    uint8_t residueStr[10] = {0};
-    get_cpu_memory(&Totalram, &freeram);
-    residue = (Totalram - freeram) / Totalram * 100;
-    sprintf(residueStr, "%d", residue);
-    lcd_fill_rectangle(0, 35, ST7735_WIDTH, 20, ST7735_BLACK);
-    lcd_write_string(36, 35, "RAM:", Font_11x18, ST7735_WHITE, ST7735_BLACK);
-    lcd_write_string(80, 35, residueStr, Font_11x18, ST7735_WHITE, ST7735_BLACK);
-    lcd_write_string(113, 35, "%", Font_11x18, ST7735_WHITE, ST7735_BLACK);
-    lcd_display_percentage(residue, ST7735_YELLOW);
-}
-
-void lcd_display_temp(void)
-{
-    uint16_t temp = 0;
-    uint8_t tempStr[10] = {0};
-    temp = get_temperature();
-    sprintf(tempStr, "%d", temp);
-    lcd_fill_rectangle(0, 35, ST7735_WIDTH, 20, ST7735_BLACK);
-    lcd_write_string(30, 35, "TEMP:", Font_11x18, ST7735_WHITE, ST7735_BLACK);
-    lcd_write_string(85, 35, tempStr, Font_11x18, ST7735_WHITE, ST7735_BLACK);
-    if (TEMPERATURE_TYPE == FAHRENHEIT)
-    {
-        lcd_write_string(118, 35, "F", Font_11x18, ST7735_WHITE, ST7735_BLACK);
-    }
-    else
-    {
-        lcd_write_string(118, 35, "C", Font_11x18, ST7735_WHITE, ST7735_BLACK);
-    }
-    if (TEMPERATURE_TYPE == FAHRENHEIT)
-    {
-        temp -= 32;
-        temp /= 1.8;
-    }
-    lcd_display_percentage((uint16_t)temp, ST7735_RED);
-}
-
-void lcd_display_disk(void)
-{
-
-    uint16_t diskMemSize = 0;
-    uint16_t diskUseMemSize = 0;
-    uint32_t sdMemSize = 0;
-    uint32_t sdUseMemSize = 0;
-
-    uint16_t memTotal = 0;
-    uint16_t useMemTotal = 0;
-    uint16_t residue = 0;
-    uint8_t residueStr[10] = {0};
-
-    get_sd_memory(&sdMemSize, &sdUseMemSize);
-    get_hard_disk_memory(&diskMemSize, &diskUseMemSize);
-
-    memTotal = sdMemSize + diskMemSize;
-    useMemTotal = sdUseMemSize + diskUseMemSize;
-    residue = useMemTotal * 1.0 / memTotal * 100;
-    sprintf(residueStr, "%d", residue);
-
-    lcd_fill_rectangle(0, 35, ST7735_WIDTH, 20, ST7735_BLACK);
-    lcd_write_string(30, 35, "DISK:", Font_11x18, ST7735_WHITE, ST7735_BLACK);
-    lcd_write_string(85, 35, residueStr, Font_11x18, ST7735_WHITE, ST7735_BLACK);
-    lcd_write_string(118, 35, "%", Font_11x18, ST7735_WHITE, ST7735_BLACK);
-    lcd_display_percentage(residue, ST7735_BLUE);
-}
+        lcd
