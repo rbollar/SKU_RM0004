@@ -268,3 +268,144 @@ void lcd_display_percentage(uint8_t val, uint16_t color)
     for (count = 0; count < 10 - val; count++)
     {
         lcd
+        xCoordinate += 10;
+    }
+}
+
+void lcd_display_cpuLoad(void)
+{
+    char hostname[128];
+    gethostname(hostname, sizeof(hostname));
+
+    uint8_t cpuLoad = 0;
+    char cpuStr[10] = {0};
+    lcd_fill_screen(ST7735_BLACK);
+    cpuLoad = get_cpu_message();
+    sprintf(cpuStr, "%d", cpuLoad);
+    lcd_fill_rectangle(0, 20, ST7735_WIDTH, 5, ST7735_BLUE);
+
+    lcd_write_string(0, 0, "Host:", Font_8x16, ST7735_WHITE, ST7735_BLACK);
+    lcd_write_string(40, 0, hostname, Font_8x16, ST7735_WHITE, ST7735_BLACK);
+    
+    lcd_write_string(36, 35, "CPU:", Font_11x18, ST7735_WHITE, ST7735_BLACK);
+    lcd_write_string(80, 35, cpuStr, Font_11x18, ST7735_WHITE, ST7735_BLACK);
+    lcd_write_string(113, 35, "%", Font_11x18, ST7735_WHITE, ST7735_BLACK);
+    lcd_display_percentage(cpuLoad, ST7735_GREEN);
+}
+
+void lcd_display_ram(void)
+{
+    float Totalram = 0.0;
+    float freeram = 0.0;
+    uint8_t residue = 0;
+    char residueStr[10] = {0};
+    get_cpu_memory(&Totalram, &freeram);
+    residue = (Totalram - freeram) / Totalram * 100;
+    sprintf(residueStr, "%d", residue);
+    lcd_fill_rectangle(0, 35, ST7735_WIDTH, 20, ST7735_BLACK);
+    lcd_write_string(36, 35, "RAM:", Font_11x18, ST7735_WHITE, ST7735_BLACK);
+    lcd_write_string(80, 35, residueStr, Font_11x18, ST7735_WHITE, ST7735_BLACK);
+    lcd_write_string(113, 35, "%", Font_11x18, ST7735_WHITE, ST7735_BLACK);
+    lcd_display_percentage(residue, ST7735_YELLOW);
+}
+
+void lcd_display_temp(void)
+{
+    uint16_t temp = 0;
+    char tempStr[10] = {0};
+    temp = get_temperature();
+    sprintf(tempStr, "%d", temp);
+    lcd_fill_rectangle(0, 35, ST7735_WIDTH, 20, ST7735_BLACK);
+    lcd_write_string(30, 35, "TEMP:", Font_11x18, ST7735_WHITE, ST7735_BLACK);
+    lcd_write_string(85, 35, tempStr, Font_11x18, ST7735_WHITE, ST7735_BLACK);
+    if (TEMPERATURE_TYPE == FAHRENHEIT)
+    {
+        lcd_write_string(118, 35, "F", Font_11x18, ST7735_WHITE, ST7735_BLACK);
+    }
+    else
+    {
+        lcd_write_string(118, 35, "C", Font_11x18, ST7735_WHITE, ST7735_BLACK);
+    }
+    if (TEMPERATURE_TYPE == FAHRENHEIT)
+    {
+        temp -= 32;
+        temp /= 1.8;
+    }
+    lcd_display_percentage((uint16_t)temp, ST7735_RED);
+}
+
+void lcd_display_disk(void)
+{
+    uint16_t diskMemSize = 0;
+    uint16_t diskUseMemSize = 0;
+    uint32_t sdMemSize = 0;
+    uint32_t sdUseMemSize = 0;
+    uint16_t memTotal = 0;
+    uint16_t useMemTotal = 0;
+    uint8_t residue = 0;
+    char residueStr[10] = {0};
+
+    get_sd_memory(&sdMemSize, &sdUseMemSize);
+    get_hard_disk_memory(&diskMemSize, &diskUseMemSize);
+
+    memTotal = sdMemSize + diskMemSize;
+    useMemTotal = sdUseMemSize + diskUseMemSize;
+    residue = useMemTotal * 1.0 / memTotal * 100;
+    sprintf(residueStr, "%d", residue);
+
+    lcd_fill_rectangle(0, 35, ST7735_WIDTH, 20, ST7735_BLACK);
+    lcd_write_string(30, 35, "DISK:", Font_11x18, ST7735_WHITE, ST7735_BLACK);
+    lcd_write_string(85, 35, residueStr, Font_11x18, ST7735_WHITE, ST7735_BLACK);
+    lcd_write_string(118, 35, "%", Font_11x18, ST7735_WHITE, ST7735_BLACK);
+    lcd_display_percentage(residue, ST7735_BLUE);
+}
+
+// Function to get the current seconds past the hour
+int get_seconds_past_hour() {
+    time_t rawtime;
+    struct tm *timeinfo;
+
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+
+    return timeinfo->tm_min * 60 + timeinfo->tm_sec;
+}
+
+// Function to display the appropriate screen based on seconds past the hour
+void lcd_display_by_time() {
+    int seconds_past_hour = get_seconds_past_hour();
+    int display_interval = 15; // Change screen every 15 seconds
+    int screen_number = (seconds_past_hour / display_interval) % 4;
+
+    switch (screen_number) {
+        case 0:
+            lcd_display_cpuLoad();
+            break;
+        case 1:
+            lcd_display_ram();
+            break;
+        case 2:
+            lcd_display_temp();
+            break;
+        case 3:
+            lcd_display_disk();
+            break;
+        default:
+            break;
+    }
+}
+
+int main() {
+    // Initialize the display
+    if (lcd_begin() != 0) {
+        fprintf(stderr, "Failed to initialize LCD\n");
+        return 1;
+    }
+
+    while (1) {
+        lcd_display_by_time();
+        sleep(1); // Update every second to check if the screen needs to change
+    }
+
+    return 0;
+}
