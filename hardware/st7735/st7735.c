@@ -405,9 +405,14 @@ void lcd_display_by_time() {
             break;
         case 3:
             lcd_display_disk();
-            show_hostname = !show_hostname; // Toggle the flag after the last display in the cycle
             break;
         default:
             break;
+    }
+
+    // Toggle the flag after completing the last case (disk)
+    if (screen_number == 3) {
+        show_hostname = !show_hostname;
+        printf("Toggled show_hostname: %d\n", show_hostname); // Debugging output
     }
 }
