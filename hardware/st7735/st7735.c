@@ -280,14 +280,12 @@ void lcd_display_cpuLoad(void)
     uint8_t cpuLoad = 0;
     char cpuStr[10] = {0};
 
-    // Fill screen background
-    lcd_fill_screen(ST7735_BLACK);
     cpuLoad = get_cpu_message();
     sprintf(cpuStr, "%d", cpuLoad);
 
-    // Draw a separator line
-    lcd_fill_rectangle(0, 20, ST7735_WIDTH, 5, ST7735_BLUE);
-
+    // Fill screen background only once at the beginning of each cycle
+    lcd_fill_screen(ST7735_BLACK);
+    
     // Display hostname or IP address based on the flag
     if (show_hostname)
     {
