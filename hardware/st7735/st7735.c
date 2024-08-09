@@ -284,8 +284,7 @@ void lcd_display_cpuLoad(void)
     sprintf(cpuStr, "%d", cpuLoad);
     lcd_fill_rectangle(0, 20, ST7735_WIDTH, 5, ST7735_BLUE);
 
-    lcd_write_string(0, 0, "Host:", Font_8x16, ST7735_WHITE, ST7735_BLACK);
-    lcd_write_string(40, 0, hostname, Font_8x16, ST7735_WHITE, ST7735_BLACK);
+    lcd_write_string(0, 0, hostname, Font_8x16, ST7735_WHITE, ST7735_BLACK);
     
     lcd_write_string(36, 35, "CPU:", Font_11x18, ST7735_WHITE, ST7735_BLACK);
     lcd_write_string(80, 35, cpuStr, Font_11x18, ST7735_WHITE, ST7735_BLACK);
