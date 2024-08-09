@@ -267,7 +267,7 @@ void lcd_display_percentage(uint8_t val, uint16_t color)
     }
     for (count = 0; count < 10 - val; count++)
     {
-        lcd
+        lcd_fill_rectangle(xCoordinate, 60, 6, 10, ST7735_GRAY);
         xCoordinate += 10;
     }
 }
