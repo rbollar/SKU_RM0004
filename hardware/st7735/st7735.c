@@ -275,27 +275,34 @@ void lcd_display_percentage(uint8_t val, uint16_t color)
 
 void lcd_display_cpuLoad(void)
 {
-    char hostname[128];
-    gethostname(hostname, sizeof(hostname));
-
-    char ip_address[20];
-    strcpy(ip_address, get_ip_address_new()); // Assuming get_ip_address_new() is a function that returns the IP address.
-
+    char iPSource[20] = {0};
+    char hostname[128] = {0};
     uint8_t cpuLoad = 0;
     char cpuStr[10] = {0};
+
+    // Fill screen background
     lcd_fill_screen(ST7735_BLACK);
     cpuLoad = get_cpu_message();
     sprintf(cpuStr, "%d", cpuLoad);
+
+    // Draw a separator line
     lcd_fill_rectangle(0, 20, ST7735_WIDTH, 5, ST7735_BLUE);
 
-    if (show_hostname) {
+    // Display hostname or IP address based on the flag
+    if (show_hostname)
+    {
+        gethostname(hostname, sizeof(hostname));
         lcd_write_string(0, 0, "Host:", Font_8x16, ST7735_WHITE, ST7735_BLACK);
         lcd_write_string(40, 0, hostname, Font_8x16, ST7735_WHITE, ST7735_BLACK);
-    } else {
+    }
+    else
+    {
+        strcpy(iPSource, get_ip_address_new());  // Get the IP address
         lcd_write_string(0, 0, "IP:", Font_8x16, ST7735_WHITE, ST7735_BLACK);
-        lcd_write_string(24, 0, ip_address, Font_8x16, ST7735_WHITE, ST7735_BLACK);
+        lcd_write_string(24, 0, iPSource, Font_8x16, ST7735_WHITE, ST7735_BLACK);
     }
 
+    // Display CPU load
     lcd_write_string(36, 35, "CPU:", Font_11x18, ST7735_WHITE, ST7735_BLACK);
     lcd_write_string(80, 35, cpuStr, Font_11x18, ST7735_WHITE, ST7735_BLACK);
     lcd_write_string(113, 35, "%", Font_11x18, ST7735_WHITE, ST7735_BLACK);
