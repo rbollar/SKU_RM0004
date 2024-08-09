@@ -80,9 +80,9 @@ if [ $converted_version -ge 12 ]; then
     BOOT_CONFIG="/boot/firmware/config.txt"
 fi
 
-if [ `grep -c "dtoverlay=gpio-shutdown,gpio_pin=4,active_low=1,gpio_pull=up" $BOOT_CONFIG` -lt '1' ];then
-    sudo bash -c "echo dtoverlay=gpio-shutdown,gpio_pin=4,active_low=1,gpio_pull=up >> $BOOT_CONFIG"
-fi
+# if [ `grep -c "dtoverlay=gpio-shutdown,gpio_pin=4,active_low=1,gpio_pull=up" $BOOT_CONFIG` -lt '1' ];then
+#    sudo bash -c "echo dtoverlay=gpio-shutdown,gpio_pin=4,active_low=1,gpio_pull=up >> $BOOT_CONFIG"
+# fi
 
 if [ `grep -c "dtparam=i2c_arm=on,i2c_arm_baudrate=400000" $BOOT_CONFIG` -lt '1' ];then
     if [ `grep -c "#dtparam=i2c_arm=on" $BOOT_CONFIG` -ne '0' ];then
