@@ -17,6 +17,7 @@
 #include "rpiInfo.h"
 
 int i2cd;
+int show_hostname = 1; // 1 = show hostname, 0 = show IP address
 
 /*
  * Set display coordinates
@@ -277,6 +278,9 @@ void lcd_display_cpuLoad(void)
     char hostname[128];
     gethostname(hostname, sizeof(hostname));
 
+    char ip_address[20];
+    strcpy(ip_address, get_ip_address_new()); // Assuming get_ip_address_new() is a function that returns the IP address.
+
     uint8_t cpuLoad = 0;
     char cpuStr[10] = {0};
     lcd_fill_screen(ST7735_BLACK);
@@ -284,8 +288,14 @@ void lcd_display_cpuLoad(void)
     sprintf(cpuStr, "%d", cpuLoad);
     lcd_fill_rectangle(0, 20, ST7735_WIDTH, 5, ST7735_BLUE);
 
-    lcd_write_string(0, 0, hostname, Font_8x16, ST7735_WHITE, ST7735_BLACK);
-    
+    if (show_hostname) {
+        lcd_write_string(0, 0, "Host:", Font_8x16, ST7735_WHITE, ST7735_BLACK);
+        lcd_write_string(40, 0, hostname, Font_8x16, ST7735_WHITE, ST7735_BLACK);
+    } else {
+        lcd_write_string(0, 0, "IP:", Font_8x16, ST7735_WHITE, ST7735_BLACK);
+        lcd_write_string(24, 0, ip_address, Font_8x16, ST7735_WHITE, ST7735_BLACK);
+    }
+
     lcd_write_string(36, 35, "CPU:", Font_11x18, ST7735_WHITE, ST7735_BLACK);
     lcd_write_string(80, 35, cpuStr, Font_11x18, ST7735_WHITE, ST7735_BLACK);
     lcd_write_string(113, 35, "%", Font_11x18, ST7735_WHITE, ST7735_BLACK);
@@ -388,6 +398,7 @@ void lcd_display_by_time() {
             break;
         case 3:
             lcd_display_disk();
+            show_hostname = !show_hostname; // Toggle the flag after the last display in the cycle
             break;
         default:
             break;
