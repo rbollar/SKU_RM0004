@@ -3,14 +3,36 @@
 #include <string.h>
 #include <unistd.h>
 
-// Function declarations for external use
 extern char* get_ip_address_new(void);
 
 uint8_t lcd_begin(void) {
-    // Implement your initialization logic here
-    // For example, initializing I2C or setting up the display parameters
+    // Example initialization logic
     printf("LCD Initialized\n");
     return 0; // Return 0 on success
+}
+
+void lcd_display_cpuLoad(void) {
+    // Implementation for displaying CPU load
+    printf("Displaying CPU Load\n");
+    // Add your display logic here
+}
+
+void lcd_display_ram(void) {
+    // Implementation for displaying RAM usage
+    printf("Displaying RAM Usage\n");
+    // Add your display logic here
+}
+
+void lcd_display_temp(void) {
+    // Implementation for displaying Temperature
+    printf("Displaying Temperature\n");
+    // Add your display logic here
+}
+
+void lcd_display_disk(void) {
+    // Implementation for displaying Disk usage
+    printf("Displaying Disk Usage\n");
+    // Add your display logic here
 }
 
 void lcd_display(uint8_t symbol) {
@@ -31,5 +53,3 @@ void lcd_display(uint8_t symbol) {
             break;
     }
 }
-
-// Assume other display functions are implemented here as discussed earlier
