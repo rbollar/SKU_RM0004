@@ -394,18 +394,3 @@ void lcd_display_by_time() {
             break;
     }
 }
-
-int main() {
-    // Initialize the display
-    if (lcd_begin() != 0) {
-        fprintf(stderr, "Failed to initialize LCD\n");
-        return 1;
-    }
-
-    while (1) {
-        lcd_display_by_time();
-        sleep(1); // Update every second to check if the screen needs to change
-    }
-
-    return 0;
-}
