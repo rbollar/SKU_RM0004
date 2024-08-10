@@ -19,6 +19,9 @@
 int i2cd;
 int show_hostname = 1; // 1 = show hostname, 0 = show IP address
 
+// Forward declaration of the lcd_display_ip function
+void lcd_display_ip(void);
+
 /*
  * Set display coordinates
  */
