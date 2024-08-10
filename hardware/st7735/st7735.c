@@ -298,24 +298,66 @@ void lcd_display_cpuLoad(void)
 
     lcd_write_string(36, 35, "CPU:", Font_11x18, ST7735_WHITE, ST7735_BLACK);
     lcd_write_string(80, 35, cpuStr, Font_11x18, ST7735_WHITE, ST7735_BLACK);
+   void lcd_display_cpuLoad(void) {
+    char hostname[128];
+    gethostname(hostname, sizeof(hostname));
+
+    char ip_address[20];
+    strcpy(ip_address, get_ip_address_new()); // Assuming get_ip_address_new() returns the IP address.
+
+    uint8_t cpuLoad = 0;
+    char cpuStr[10] = {0};
+    lcd_fill_screen(ST7735_BLACK);
+    cpuLoad = get_cpu_message();
+    sprintf(cpuStr, "%d", cpuLoad);
+    lcd_fill_rectangle(0, 20, ST7735_WIDTH, 5, ST7735_BLUE);
+
+    if (show_hostname) {
+        lcd_write_string(0, 0, "Host:", Font_8x16, ST7735_WHITE, ST7735_BLACK);
+        lcd_write_string(40, 0, hostname, Font_8x16, ST7735_WHITE, ST7735_BLACK);
+    } else {
+        lcd_write_string(0, 0, "IP:", Font_8x16, ST7735_WHITE, ST7735_BLACK);
+        lcd_write_string(24, 0, ip_address, Font_8x16, ST7735_WHITE, ST7735_BLACK);
+    }
+
+    lcd_write_string(36, 35, "CPU:", Font_11x18, ST7735_WHITE, ST7735_BLACK);
+    lcd_write_string(80, 35, cpuStr, Font_11x18, ST7735_WHITE, ST7735_BLACK);
     lcd_write_string(113, 35, "%", Font_11x18, ST7735_WHITE, ST7735_BLACK);
     lcd_display_percentage(cpuLoad, ST7735_GREEN);
 }
 
-void lcd_display_ram(void)
-{
-    float Totalram = 0.0;
-    float freeram = 0.0;
-    uint8_t residue = 0;
-    char residueStr[10] = {0};
-    get_cpu_memory(&Totalram, &freeram);
-    residue = (Totalram - freeram) / Totalram * 100;
-    sprintf(residueStr, "%d", residue);
-    lcd_fill_rectangle(0, 35, ST7735_WIDTH, 20, ST7735_BLACK);
-    lcd_write_string(36, 35, "RAM:", Font_11x18, ST7735_WHITE, ST7735_BLACK);
-    lcd_write_string(80, 35, residueStr, Font_11x18, ST7735_WHITE, ST7735_BLACK);
-    lcd_write_string(113, 35, "%", Font_11x18, ST7735_WHITE, ST7735_BLACK);
-    lcd_display_percentage(residue, ST7735_YELLOW);
+void lcd_display_ram(void) {
+    // Same structure for showing RAM usage
+    // with the hostname/IP address at the top
+}
+
+void lcd_display_temp(void) {
+    // Same structure for showing temperature
+    // with the hostname/IP address at the top
+}
+
+void lcd_display_disk(void) {
+    // Same structure for showing disk usage
+    // with the hostname/IP address at the top
+}
+
+void lcd_display(uint8_t symbol) {
+    switch (symbol) {
+        case 0:
+            lcd_display_cpuLoad();
+            break;
+        case 1:
+            lcd_display_ram();
+            break;
+        case 2:
+            lcd_display_temp();
+            break;
+        case 3:
+            lcd_display_disk();
+            break;
+        default:
+            break;
+    }
 }
 
 void lcd_display_temp(void)
