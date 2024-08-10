@@ -1,20 +1,7 @@
 #include "st7735.h"
-#include "time.h"
 #include <stdio.h>
 #include <string.h>
-#include <sys/sysinfo.h>
-#include <sys/vfs.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/ioctl.h>
-#include <netinet/in.h>
 #include <unistd.h>
-#include <arpa/inet.h>
-#include <sys/ioctl.h>
-#include <linux/i2c.h>
-#include <linux/i2c-dev.h>
-#include <fcntl.h>
-#include "rpiInfo.h"
 
 int i2cd;
 int show_hostname = 1; // 1 = show hostname, 0 = show IP address
