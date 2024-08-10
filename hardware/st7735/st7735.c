@@ -17,7 +17,7 @@
 #include "rpiInfo.h"
 
 int i2cd;
-// int show_hostname = 1; // 1 = show hostname, 0 = show IP address
+int show_hostname = 1; // 1 = show hostname, 0 = show IP address
 
 /*
  * Set display coordinates
