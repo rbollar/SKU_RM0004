@@ -246,6 +246,9 @@ void lcd_display(uint8_t symbol)
     case 3:
         lcd_display_disk();
         break;
+    case 4:
+        lcd_display_ip();  // New screen to display IP address
+        break;
     default:
         break;
     }
@@ -367,6 +370,16 @@ void lcd_display_disk(void)
     lcd_write_string(85, 35, residueStr, Font_11x18, ST7735_WHITE, ST7735_BLACK);
     lcd_write_string(118, 35, "%", Font_11x18, ST7735_WHITE, ST7735_BLACK);
     lcd_display_percentage(residue, ST7735_BLUE);
+}
+
+void lcd_display_ip(void)
+{
+    char ip_address[20];
+    strcpy(ip_address, get_ip_address_new());
+
+    lcd_fill_screen(ST7735_BLACK);
+    lcd_write_string(0, 0, "IP Address:", Font_11x18, ST7735_WHITE, ST7735_BLACK);
+    lcd_write_string(0, 20, ip_address, Font_11x18, ST7735_WHITE, ST7735_BLACK);
 }
 
 // Function to get the current seconds past the hour
