@@ -375,14 +375,25 @@ void lcd_display_disk(void)
     lcd_display_percentage(residue, ST7735_BLUE);
 }
 
-void lcd_display_ip(void)
-{
-    char ip_address[20];
-    strcpy(ip_address, get_ip_address_new());
+void lcd_display_ip(void) {
+    char hostname[128];
+    gethostname(hostname, sizeof(hostname));
 
-    lcd_fill_screen(ST7735_BLACK);
-    lcd_write_string(0, 0, "IP Address:", Font_11x18, ST7735_WHITE, ST7735_BLACK);
-    lcd_write_string(0, 20, ip_address, Font_11x18, ST7735_WHITE, ST7735_BLACK);
+    char ip_address[20];
+    strcpy(ip_address, get_ip_address_new()); // Assuming get_ip_address_new() is a function that returns the IP address.
+
+    lcd_fill_screen(ST7735_BLACK);  // Clear the screen with black
+
+    // Display the hostname at the top
+    lcd_write_string(0, 0, "Host:", Font_8x16, ST7735_WHITE, ST7735_BLACK);
+    lcd_write_string(40, 0, hostname, Font_8x16, ST7735_WHITE, ST7735_BLACK);
+
+    // Draw a line under the hostname
+    lcd_fill_rectangle(0, 20, ST7735_WIDTH, 5, ST7735_BLUE);
+
+    // Display the IP address
+    lcd_write_string(0, 35, "IP:", Font_11x18, ST7735_WHITE, ST7735_BLACK);
+    lcd_write_string(40, 35, ip_address, Font_11x18, ST7735_WHITE, ST7735_BLACK);
 }
 
 // Function to get the current seconds past the hour
