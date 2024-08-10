@@ -380,7 +380,7 @@ void lcd_display_ip(void) {
     strcpy(ip_address, get_ip_address_new()); // Assuming get_ip_address_new() is a function that returns the IP address.
 
     // Display "IP Address" text on one line
-    lcd_write_string(30, 35, "IP Address:", Font_11x18, ST7735_WHITE, ST7735_BLACK);
+    lcd_write_string(25, 35, "IP Address:", Font_11x18, ST7735_WHITE, ST7735_BLACK);
 
     // Display the actual IP address on the next line
     lcd_write_string(30, 55, ip_address, Font_11x18, ST7735_WHITE, ST7735_BLACK);
