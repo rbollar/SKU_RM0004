@@ -399,25 +399,27 @@ int get_seconds_past_hour() {
 
 // Function to display the appropriate screen based on seconds past the hour
 void lcd_display_by_time() {
+    static int last_screen_number = -1;
     int seconds_past_hour = get_seconds_past_hour();
     int display_interval = 15; // Change screen every 15 seconds
     int screen_number = (seconds_past_hour / display_interval) % 4;
 
-    switch (screen_number) {
-        case 0:
-            lcd_display_cpuLoad();
-            break;
-        case 1:
-            lcd_display_ram();
-            break;
-        case 2:
-            lcd_display_temp();
-            break;
-        case 3:
-            lcd_display_disk();
-            show_hostname = !show_hostname; // Toggle the flag after the last display in the cycle
-            break;
-        default:
-            break;
+    if (screen_number != last_screen_number) {
+        // Only update the screen if the screen number has changed
+        switch (screen_number) {
+            case 0:
+                lcd_display_cpuLoad();
+                break;
+            case 1:
+                lcd_display_ram();
+                break;
+            case 2:
+                lcd_display_temp();
+                break;
+            case 3:
+                lcd_display_disk();
+                break;
+        }
+        last_screen_number = screen_number;
     }
 }
