@@ -6,6 +6,9 @@ Demo for ssd1306 i2c driver for  Raspberry Pi
 #include "time.h"
 #include <unistd.h>
 
+// Add this declaration if it's not in st7735.h
+void lcd_display_by_time(void);
+
 int main(void) 
 {
     if(lcd_begin())  // LCD Screen initialization
