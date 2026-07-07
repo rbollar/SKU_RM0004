@@ -406,6 +406,16 @@ void lcd_display_by_time() {
 
     if (screen_number != last_screen_number) {
         // Only update the screen if the screen number has changed
+
+        // At the start of each rotation cycle, alternate the CPU-screen
+        // header between hostname and IP address. Screen 0 (CPU) is the
+        // only page that redraws the header, and it persists visually
+        // through the ram/temp/disk pages, so this shows the hostname for
+        // one full cycle and the IP address for the next.
+        if (screen_number == 0) {
+            show_hostname = !show_hostname;
+        }
+
         switch (screen_number) {
             case 0:
                 lcd_display_cpuLoad();
